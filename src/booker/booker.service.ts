@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBookerDto } from './dto/create-booker.dto';
 import { UpdateBookerDto } from './dto/update-booker.dto';
+import {PrismaService} from '../prisma/prisma.service'
 
 @Injectable()
 export class BookerService {
+  constructor(private readonly prisma: PrismaService){}
+
   create(createBookerDto: CreateBookerDto) {
     return 'This action adds a new booker';
   }
