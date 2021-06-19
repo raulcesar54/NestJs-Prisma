@@ -7,8 +7,7 @@ import { PrismaService } from '../prisma/prisma.service';
 export class BookerService {
   constructor(private readonly prisma: PrismaService) {}
 
-  // @Post('/company')
-  create(createBookerDto: CreateBookerDto) {
+  createCompany(createBookerDto: CreateBookerDto) {
     return this.prisma.commpany.create({
       data: {
         cnpj: createBookerDto.cnpj,

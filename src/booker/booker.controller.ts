@@ -7,9 +7,9 @@ import { UpdateBookerDto } from './dto/update-booker.dto';
 export class BookerController {
   constructor(private readonly bookerService: BookerService) {}
 
-  @Post()
+  @Post('/company')
   create(@Body() createBookerDto: CreateBookerDto) {
-    return this.bookerService.create(createBookerDto);
+    return this.bookerService.createCompany(createBookerDto);
   }
 
   @Get()
