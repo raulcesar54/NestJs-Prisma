@@ -1,18 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Post } from '@nestjs/common';
 import { CreateBookerDto } from './dto/create-booker.dto';
 import { UpdateBookerDto } from './dto/update-booker.dto';
-import {PrismaService} from '../prisma/prisma.service'
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class BookerService {
-  constructor(private readonly prisma: PrismaService){}
+  constructor(private readonly prisma: PrismaService) {}
 
+  // @Post('/company')
   create(createBookerDto: CreateBookerDto) {
-    return 'This action adds a new booker';
+    return this.prisma.commpany.create({
+      data: {
+        cnpj: createBookerDto.cnpj,
+        avatar: createBookerDto.avatar,
+        name: createBookerDto.name,
+      },
+    });
   }
 
   findAll() {
-    return `This action returns all booker`;
+    return this.prisma.commpany.findMany();
   }
 
   findOne(id: number) {
