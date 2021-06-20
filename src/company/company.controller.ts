@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { CompanyService } from './company.service';
 import { CreateCompanyDto } from './dto/create-company.dto';
@@ -17,7 +18,10 @@ export class CompanyController {
 
   @Post()
   create(@Body() createCompanyDto: CreateCompanyDto) {
-    return this.companyService.create(createCompanyDto);
+    return this.companyService.create(createCompanyDto).catch((e) => {
+      console.log();
+      throw new NotFoundException(e.message);
+    });
   }
 
   @Get()
@@ -27,16 +31,22 @@ export class CompanyController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.companyService.findOne(+id);
+    return this.companyService.findOne(+id).catch((e) => {
+      throw new NotFoundException(e.message);
+    });
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCompanyDto: UpdateCompanyDto) {
-    return this.companyService.update(+id, updateCompanyDto);
+    return this.companyService.update(+id, updateCompanyDto).catch((e) => {
+      throw new NotFoundException(e.message);
+    });
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.companyService.remove(+id);
+    return this.companyService.remove(+id).catch((e) => {
+      throw new NotFoundException(e.message);
+    });
   }
 }

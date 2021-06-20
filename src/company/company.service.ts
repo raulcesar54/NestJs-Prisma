@@ -7,23 +7,75 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 export class CompanyService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createCompanyDto: CreateCompanyDto) {
-    return 'This action adds a new company';
+  async findOneCompany(cnpj: string) {
+    return this.prisma.commpany.findFirst({
+      where: { cnpj },
+    });
   }
 
-  findAll() {
-    return this.prisma.commpany.findMany();
+  async create(createCompanyDto: CreateCompanyDto) {
+    const verifyCnpj = await this.findOneCompany(createCompanyDto.cnpj);
+
+    if (!createCompanyDto.avatar) {
+      throw Error('Avatar is required');
+    }
+    if (!createCompanyDto.name) {
+      throw Error('Name is required');
+    }
+    if (!createCompanyDto.cnpj) {
+      throw Error('Cnpj is required');
+    }
+    if (verifyCnpj) {
+      throw Error('Company already registered');
+    }
+
+    return this.prisma.commpany.create({
+      data: {
+        cnpj: createCompanyDto.cnpj,
+        name: createCompanyDto.name,
+        avatar: createCompanyDto?.avatar,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
+  async findAll() {
+    return await this.prisma.commpany.findMany();
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
+  async findOne(id: number) {
+    const findCompany = await this.prisma.commpany.findFirst({
+      where: { id },
+    });
+    if (!findCompany) {
+      throw Error('Company not found');
+    }
+    return findCompany;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  async update(id: number, createCompanyDto: UpdateCompanyDto) {
+    const findCompany = await this.prisma.commpany.findFirst({
+      where: { id },
+    });
+    if (!findCompany) {
+      throw Error('Company not found');
+    }
+    return this.prisma.commpany.update({
+      where: { id },
+      data: {
+        avatar: createCompanyDto.avatar,
+        name: createCompanyDto.name,
+      },
+    });
+  }
+
+  async remove(id: number) {
+    const findCompany = await this.prisma.commpany.findFirst({
+      where: { id },
+    });
+    if (!findCompany) {
+      throw Error('Company not found');
+    }
+    await this.prisma.commpany.delete({ where: { id } });
+    return '';
   }
 }
